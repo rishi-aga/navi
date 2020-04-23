@@ -1,26 +1,28 @@
 import { get } from '@ember/object';
 import { module, test } from 'qunit';
-import MetricMetadataModel from 'navi-data/models/metadata/metric';
 import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
-
+import { TestContext } from 'ember-test-helpers';
+import MetricMetadataModel from 'navi-data/models/metadata/metric';
+import MetricFunction from 'navi-data/models/metadata/metric-function';
+// @ts-ignore
 import metadataRoutes from '../../../helpers/metadata-routes';
 
-let Payload, Metric, MoneyMetric, ClicksMetric, server;
+const Payload = {
+  id: 'dayAvgPageViews',
+  name: 'Page Views (Daily Avg)',
+  category: 'Page Views',
+  valueType: 'number'
+};
+let Metric: MetricMetadataModel, MoneyMetric: MetricMetadataModel, ClicksMetric: MetricMetadataModel;
+let server: TODO;
 
 module('Unit | Metadata Model | Metric', function(hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(async function() {
+  hooks.beforeEach(async function(this: TestContext) {
     server = new Pretender(metadataRoutes);
     await this.owner.lookup('service:bard-metadata').loadMetadata();
-
-    Payload = {
-      id: 'dayAvgPageViews',
-      name: 'Page Views (Daily Avg)',
-      category: 'Page Views',
-      valueType: 'number'
-    };
 
     Metric = MetricMetadataModel.create(this.owner.ownerInjection(), Payload);
     MoneyMetric = MetricMetadataModel.create(this.owner.ownerInjection(), {
@@ -64,7 +66,7 @@ module('Unit | Metadata Model | Metric', function(hooks) {
     });
 
     const metricFunction = metricOne.metricFunction;
-    const expectedMetricFunc = this.owner
+    const expectedMetricFunc: MetricFunction = this.owner
       .lookup('service:keg')
       .getById('metadata/metric-function', 'moneyMetric', 'dummy');
     assert.equal(metricFunction, expectedMetricFunc, 'Metric function is returned correctly');
@@ -148,7 +150,7 @@ module('Unit | Metadata Model | Metric', function(hooks) {
 
     const result = await metricOne.get('extended');
     assert.ok(
-      Object.keys(expected).every(key => result[key] === expected[key]),
+      Object.keys(expected).every((key: keyof typeof expected) => result[key] === expected[key]),
       'metric model can fetch extended attributes'
     );
   });

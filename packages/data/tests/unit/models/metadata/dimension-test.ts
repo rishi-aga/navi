@@ -2,36 +2,31 @@ import { module, test } from 'qunit';
 import DimensionMetadataModel from 'navi-data/models/metadata/dimension';
 import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
+// @ts-ignore
 import metadataRoutes from '../../../helpers/metadata-routes';
 
-let Payload, Dimension;
+const Payload = {
+  id: 'age',
+  name: 'Age',
+  category: 'Audience',
+  fields: [
+    {
+      name: 'id',
+      description: 'description',
+      tags: ['primaryKey', 'display']
+    },
+    {
+      name: 'desc',
+      description: 'description',
+      tags: ['description', 'display']
+    },
+    { name: 'emptyTags', description: 'description', tags: [] },
+    { name: 'missingTags', description: 'description' }
+  ]
+};
 
 module('Unit | Metadata Model | Dimension', function(hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(function() {
-    Payload = {
-      id: 'age',
-      name: 'Age',
-      category: 'Audience',
-      fields: [
-        {
-          name: 'id',
-          description: 'description',
-          tags: ['primaryKey', 'display']
-        },
-        {
-          name: 'desc',
-          description: 'description',
-          tags: ['description', 'display']
-        },
-        { name: 'emptyTags', description: 'description', tags: [] },
-        { name: 'missingTags', description: 'description' }
-      ]
-    };
-
-    Dimension = DimensionMetadataModel.create(this.owner.ownerInjection(), Payload);
-  });
 
   test('factory has identifierField defined', function(assert) {
     assert.expect(1);
@@ -42,6 +37,7 @@ module('Unit | Metadata Model | Dimension', function(hooks) {
   test('it properly hydrates properties', function(assert) {
     assert.expect(4);
 
+    let Dimension = DimensionMetadataModel.create(this.owner.ownerInjection(), Payload);
     assert.deepEqual(Dimension.id, Payload.id, 'name property is hydrated properly');
 
     assert.equal(Dimension.name, Payload.name, 'longName property was properly hydrated');
@@ -54,6 +50,7 @@ module('Unit | Metadata Model | Dimension', function(hooks) {
   test('getTagForField', function(assert) {
     assert.expect(5);
 
+    let Dimension = DimensionMetadataModel.create(this.owner.ownerInjection(), Payload);
     assert.deepEqual(
       Dimension.getTagsForField('id'),
       Payload.fields[0].tags,
@@ -78,12 +75,14 @@ module('Unit | Metadata Model | Dimension', function(hooks) {
       'getTagsForField returns an empty array when `fields` property is missing'
     );
 
+    // @ts-ignore test undefined
     assert.deepEqual(Dimension.getTagsForField(), [], 'getTagsForField returns an empty array when field is undefined');
   });
 
   test('getFieldsForTag', function(assert) {
     assert.expect(5);
 
+    let Dimension = DimensionMetadataModel.create(this.owner.ownerInjection(), Payload);
     assert.deepEqual(
       Dimension.getFieldsForTag('primaryKey'),
       [Payload.fields[0]],
@@ -108,12 +107,14 @@ module('Unit | Metadata Model | Dimension', function(hooks) {
       'getFieldsForTag returns an empty array when tag is missing'
     );
 
+    // @ts-ignore test undefined
     assert.deepEqual(Dimension.getFieldsForTag(), [], 'getFieldsForTag returns an empty array when tag is undefined');
   });
 
   test('primaryKeyFieldName', function(assert) {
     assert.expect(5);
 
+    let Dimension = DimensionMetadataModel.create(this.owner.ownerInjection(), Payload);
     assert.deepEqual(
       Dimension.get('primaryKeyFieldName'),
       'id',
@@ -159,6 +160,7 @@ module('Unit | Metadata Model | Dimension', function(hooks) {
   test('descriptionFieldName', function(assert) {
     assert.expect(5);
 
+    let Dimension = DimensionMetadataModel.create(this.owner.ownerInjection(), Payload);
     assert.deepEqual(
       Dimension.get('descriptionFieldName'),
       'desc',
@@ -228,6 +230,7 @@ module('Unit | Metadata Model | Dimension', function(hooks) {
 
     const dimension2 = DimensionMetadataModel.create(this.owner.ownerInjection(), {
       cardinality: 'MEDIUM',
+      // @ts-ignore column type
       type: 'somethingElse'
     });
 

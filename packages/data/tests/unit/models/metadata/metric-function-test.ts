@@ -1,34 +1,28 @@
 import { module, test } from 'qunit';
 import MetricFunctionMetadataModel from 'navi-data/models/metadata/metric-function';
+import FunctionArgument from 'navi-data/models/metadata/function-argument';
 import { setupTest } from 'ember-qunit';
 
-let Payload, MetricFunction;
+const argument = ({
+  id: 'currency',
+  name: 'Currency',
+  description: 'moneyz',
+  source: 'dummy',
+  valueType: 'text',
+  type: 'ref',
+  expression: 'dimension:displayCurrency',
+  defaultValue: 'USD'
+} as unknown) as FunctionArgument;
+const Payload = {
+  id: 'moneyMetric',
+  name: 'Money Metric',
+  description: 'Currency parameter',
+  source: 'dummy',
+  arguments: [argument]
+};
 
 module('Unit | Metadata Model | Metric Function', function(hooks) {
   setupTest(hooks);
-
-  hooks.beforeEach(async function() {
-    Payload = {
-      id: 'moneyMetric',
-      name: 'Money Metric',
-      description: 'Currency parameter',
-      source: 'dummy',
-      arguments: [
-        {
-          id: 'currency',
-          name: 'Currency',
-          description: 'moneyz',
-          source: 'dummy',
-          valueType: 'text',
-          type: 'ref',
-          expression: 'dimension:displayCurrency',
-          defaultValue: 'USD'
-        }
-      ]
-    };
-
-    MetricFunction = MetricFunctionMetadataModel.create(this.owner.ownerInjection(), Payload);
-  });
 
   test('factory has identifierField defined', function(assert) {
     assert.expect(1);
@@ -39,6 +33,7 @@ module('Unit | Metadata Model | Metric Function', function(hooks) {
   test('it properly hydrates properties', function(assert) {
     assert.expect(5);
 
+    const MetricFunction = MetricFunctionMetadataModel.create(this.owner.ownerInjection(), Payload);
     const { id, name, description, source, arguments: args } = MetricFunction;
 
     assert.equal(id, Payload.id, 'id property is hydrated properly');

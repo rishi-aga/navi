@@ -350,13 +350,13 @@ const METRIC_MAP = {
   pageViews: PageViews
 };
 
-export default function(index = 0) {
+export default function(this: TODO, index = 0) {
   const host = config.navi.dataSources[index].uri;
   this.get(`${host}/v1/tables`, function() {
     return [200, { 'Content-Type': 'application/json' }, JSON.stringify({ tables: index > 0 ? Tables2 : Tables })];
   });
 
-  this.get(`${host}/v1/metrics/:id`, function({ params: { id } }) {
+  this.get(`${host}/v1/metrics/:id`, function({ params: { id } }: TODO<{ params: { id: keyof typeof METRIC_MAP } }>) {
     return [200, { 'Content-Type': 'application/json' }, JSON.stringify(METRIC_MAP[id])];
   });
 

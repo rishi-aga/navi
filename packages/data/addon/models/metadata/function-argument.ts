@@ -12,10 +12,12 @@ export const INTRINSIC_VALUE_EXPRESSION = 'self';
 
 type FunctionArgumentType = 'ref' | 'primitive';
 
+export type LocalFunctionArgumentValues = { id: string; description: string };
+
 type LocalFunctionArgument = FunctionArgumentMetadataModel & {
   type: 'ref';
   expression: 'self';
-  _localValues: string[];
+  _localValues: LocalFunctionArgumentValues[];
 };
 
 /**
@@ -83,12 +85,12 @@ export default class FunctionArgumentMetadataModel extends EmberObject {
    * if metric function ids are not supplied by the metadata endpoint,
    * then enum values provided in the parameter will be placed here
    */
-  protected _localValues?: string[];
+  protected _localValues?: LocalFunctionArgumentValues[];
 
   /**
    * @property {Promise} values - array of values used for function arguments with an enum type
    */
-  get values(): Promise<string[]> | undefined {
+  get values(): Promise<LocalFunctionArgumentValues[]> | undefined {
     if (isLocalFunction(this)) {
       return Promise.resolve(this._localValues);
     }

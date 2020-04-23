@@ -1,28 +1,30 @@
-import { get } from '@ember/object';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
+import { TestContext } from 'ember-test-helpers';
+import Table from 'navi-data/models/metadata/table';
+import KegService from 'navi-data/services/keg';
 
-let Payload, Model, Keg, TableFactory;
+const Payload = {
+  id: 'tableA',
+  name: 'Table A',
+  description: 'Table A',
+  category: 'table',
+  cardinality: 'LARGE',
+  metricIds: ['pv'],
+  dimensionIds: ['age'],
+  timeDimensionIds: ['orderDate'],
+  timeGrainIds: ['day', 'month', 'week'],
+  source: 'dummy',
+  tags: ['DISPLAY']
+};
+
+let Model: Table, Keg: KegService, TableFactory: any;
 
 module('Unit | Metadata Model | Table', function(hooks) {
   setupTest(hooks);
 
-  hooks.beforeEach(function() {
-    Payload = {
-      id: 'tableA',
-      name: 'Table A',
-      description: 'Table A',
-      category: 'table',
-      cardinality: 'LARGE',
-      metricIds: ['pv'],
-      dimensionIds: ['age'],
-      timeDimensionIds: ['orderDate'],
-      timeGrainIds: ['day', 'month', 'week'],
-      source: 'dummy',
-      tags: ['DISPLAY']
-    };
-
+  hooks.beforeEach(function(this: TestContext) {
     Model = run(() => this.owner.factoryFor('model:metadata/table').create(Payload));
 
     //Looking up and injecting keg into the model
@@ -68,12 +70,13 @@ module('Unit | Metadata Model | Table', function(hooks) {
   test('factory has identifierField defined', function(assert) {
     assert.expect(1);
 
-    assert.equal(get(TableFactory, 'identifierField'), 'id', 'identifierField property is set to `id`');
+    assert.equal(TableFactory.identifierField, 'id', 'identifierField property is set to `id`');
   });
 
   test('it properly hydrates properties', function(assert) {
     assert.expect(11);
 
+    // @ts-ignore get private fields
     const {
       id,
       name,
