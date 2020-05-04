@@ -2,10 +2,10 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import { run } from '@ember/runloop';
 import { TestContext } from 'ember-test-helpers';
-import Table from 'navi-data/models/metadata/table';
+import Table, { TableMetadataPayload } from 'navi-data/models/metadata/table';
 import KegService from 'navi-data/services/keg';
 
-const Payload = {
+const Payload: TableMetadataPayload = {
   id: 'tableA',
   name: 'Table A',
   description: 'Table A',

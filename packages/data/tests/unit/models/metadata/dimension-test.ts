@@ -1,14 +1,19 @@
 import { module, test } from 'qunit';
-import DimensionMetadataModel from 'navi-data/models/metadata/dimension';
+import DimensionMetadataModel, { DimensionMetadataPayload } from 'navi-data/models/metadata/dimension';
 import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
 // @ts-ignore
 import metadataRoutes from '../../../helpers/metadata-routes';
 
-const Payload = {
+const Payload: DimensionMetadataPayload = {
   id: 'age',
   name: 'Age',
   category: 'Audience',
+  tableId: 'test',
+  source: 'test',
+  valueType: 'testType',
+  type: 'field',
+  tags: [],
   fields: [
     {
       name: 'id',

@@ -3,16 +3,21 @@ import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Pretender from 'pretender';
 import { TestContext } from 'ember-test-helpers';
-import MetricMetadataModel from 'navi-data/models/metadata/metric';
+import MetricMetadataModel, { MetricMetadataPayload } from 'navi-data/models/metadata/metric';
 import MetricFunction from 'navi-data/models/metadata/metric-function';
 // @ts-ignore
 import metadataRoutes from '../../../helpers/metadata-routes';
 
-const Payload = {
+const Payload: MetricMetadataPayload = {
   id: 'dayAvgPageViews',
   name: 'Page Views (Daily Avg)',
   category: 'Page Views',
-  valueType: 'number'
+  valueType: 'number',
+  tableId: 'test',
+  source: 'test',
+  defaultFormat: 'none',
+  type: 'field',
+  tags: []
 };
 let Metric: MetricMetadataModel, MoneyMetric: MetricMetadataModel, ClicksMetric: MetricMetadataModel;
 let server: TODO;
