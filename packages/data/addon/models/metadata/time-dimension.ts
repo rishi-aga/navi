@@ -5,8 +5,9 @@
 import DimensionMetadataModel, { DimensionMetadata, DimensionMetadataPayload } from './dimension';
 import { ColumnInstance, ColumnType } from './column';
 
+export type SupportedGrains = 'second' | 'minute' | 'hour' | 'day' | 'week' | 'isoweek' | 'month' | 'quarter' | 'year';
 interface TimeDimensionGrain {
-  id: string;
+  id: SupportedGrains;
   expression: string;
   grain: string;
 }
